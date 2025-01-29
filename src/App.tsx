@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import GlobalStyles from "./styles/GlobalStyles";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
+import Heading from "./ui/Heading";
+import Row from "./ui/Row";
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <GlobalStyles />
+      <Row type="horizantal">
+        <Heading as="h1">This is a H1 Heading</Heading>
+        <div>
+          <Heading as="h2">This is a H1 Heading</Heading>
+          <Button size="small" variation="secondary">
+            Hello
+          </Button>
+          <Button size="medium" variation="primary">
+            Hello2
+          </Button>
+          <Button>Default</Button>
+        </div>
+      </Row>
+
+      <Row type="vertical">
+        <Heading as="h3">This is a H1 Heading</Heading>
+        <form>
+          <Input type="number" />
+          <Input type="number" />
+        </form>
+      </Row>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
