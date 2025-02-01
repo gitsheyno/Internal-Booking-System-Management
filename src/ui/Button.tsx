@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 type PropsType = {
   size?: "small" | "medium" | "large";
-  variation?: "primary" | "secondary" | "danger";
+  $variation?: "primary" | "secondary" | "danger"; // 👈 Updated here
 };
 
 const sizes = {
@@ -60,12 +60,12 @@ const Button = styled.button<PropsType>`
   box-shadow: var(--shadow-sm);
 
   ${(props) => sizes[props.size || "medium"]}
-  ${(props) => variations[props.variation || "primary"]}
+  ${(props) => variations[props.$variation || "primary"]} /* 👈 Updated here */
 `;
 
 Button.defaultProps = {
   size: "medium",
-  variation: "primary",
+  $variation: "primary", // 👈 Updated here
 };
 
 export default Button;
