@@ -1,4 +1,5 @@
 import supabase from "./supabase";
+import { supabaseUrl } from "./supabase";
 export async function getCabins() {
   const { data, error } = await supabase.from("cabins").select("*");
 
@@ -25,15 +26,44 @@ export async function createCabin(newCabin: {
   regularPrice: number;
   discount?: number;
   description?: string;
-  image?: string | null;
+  image?: FileList | null;
 }) {
+  console.log(newCabin, "check");
+
+  const imageName = newCabin.image
+    ? `${Math.random()}-${(newCabin.image[0].name as string).replaceAll(
+        "/",
+        ""
+      )}`
+    : "";
+
+  const imagePath = `${supabaseUrl}/storage/v1/object/public/Hotel/${imageName}`;
+
+  /**
+   * Create a new cabin
+   */
   const { data, error } = await supabase
     .from("cabins")
-    .insert(newCabin)
+    .insert({ ...newCabin, image: imagePath })
     .select();
 
   if (error) {
     console.error(error);
     throw new Error("An error occurred while creating cabins");
+  }
+
+  /**
+   * Upload the image
+   */
+  if (newCabin.image) {
+    const { error: uploadError } = await supabase.storage
+      .from("Hotel")
+      .upload(imageName, newCabin.image[0]);
+
+    if (uploadError) {
+      await supabase.from("cabins").delete().eq("id", data[0].id);
+
+      throw new Error("An error occurred while uploading the image");
+    }
   }
 }

@@ -16,11 +16,11 @@ type NewCabin = {
   regularPrice: number;
   discount?: number;
   description?: string;
-  image?: string | null;
+  image?: FileList | null;
 };
 
 function CreateCabinForm() {
-  const { register, handleSubmit, reset, getValues, formState, watch } =
+  const { register, handleSubmit, reset, formState, watch } =
     useForm<NewCabin>();
 
   const { errors } = formState;
@@ -43,7 +43,10 @@ function CreateCabinForm() {
   });
 
   const onSubmit = (newCabin: NewCabin) => {
-    mutate(newCabin);
+    if (newCabin.image) {
+      const file = newCabin.image;
+      mutate({ ...newCabin, image: file });
+    }
   };
 
   const onError = (data) => {
@@ -117,7 +120,12 @@ function CreateCabinForm() {
       </FormRowComponent>
 
       <FormRowComponent label="Cabin photo">
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", { required: "This field is required" })}
+          type="file"
+        />
       </FormRowComponent>
       <FormRowComponent>
         <Button disabled={isPending} $variation="secondary" type="reset">
