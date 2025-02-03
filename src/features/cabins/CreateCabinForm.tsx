@@ -30,7 +30,7 @@ type EditCabin = {
   regularPrice: number | null;
 };
 
-function CreateCabinForm({ cabinToEdit }: { cabinToEdit: EditCabin }) {
+function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
   if (cabinToEdit) {
     console.log("yes");
   } else {
@@ -43,7 +43,7 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit: EditCabin }) {
   const { register, handleSubmit, reset, formState, watch } = useForm<
     NewCabin | EditCabin
   >({
-    defaultValues: isEditSession ? { ...cabinToEdit } : {},
+    defaultValues: isEditSession && cabinToEdit ? { ...cabinToEdit } : {},
   });
 
   const { errors } = formState;
@@ -74,7 +74,7 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit: EditCabin }) {
         mutate({ ...newCabin, image: file } as NewCabin);
       } else {
         console.log("edit", (newCabin as EditCabin).id);
-        mutate({ ...newCabin } as EditCabin, (newCabin as EditCabin).id);
+        mutate({ ...newCabin, id: (newCabin as EditCabin).id } as EditCabin);
       }
     }
   };
@@ -157,7 +157,7 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit: EditCabin }) {
           id="image"
           accept="image/*"
           {...register("image", {
-            required: cabinToEdit.id ? false : "This field is required",
+            required: cabinToEdit?.id ? false : "This field is required",
           })}
           type="file"
         />
