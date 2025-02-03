@@ -19,9 +19,32 @@ type NewCabin = {
   image?: FileList | null;
 };
 
-function CreateCabinForm() {
-  const { register, handleSubmit, reset, formState, watch } =
-    useForm<NewCabin>();
+type EditCabin = {
+  created_at: string;
+  description: string | null;
+  discount: number | null;
+  id: number;
+  image?: string | null;
+  maxCapacity: number | null;
+  name: string | null;
+  regularPrice: number | null;
+};
+
+function CreateCabinForm({ cabinToEdit }: { cabinToEdit: EditCabin }) {
+  if (cabinToEdit) {
+    console.log("yes");
+  } else {
+    console.log("no");
+  }
+  // const { id: editId, ...editValues } = cabinToEdit;
+
+  const isEditSession = Boolean(cabinToEdit?.id);
+
+  const { register, handleSubmit, reset, formState, watch } = useForm<
+    NewCabin | EditCabin
+  >({
+    defaultValues: isEditSession ? { ...cabinToEdit } : {},
+  });
 
   const { errors } = formState;
   const regularPrice = watch("regularPrice");
@@ -29,7 +52,7 @@ function CreateCabinForm() {
   const queryQlient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (newCabin: NewCabin) => createCabin(newCabin),
+    mutationFn: createCabin,
     onSuccess: () => {
       toast.success("Cabin created successfully");
       queryQlient.invalidateQueries({
@@ -42,10 +65,17 @@ function CreateCabinForm() {
     },
   });
 
-  const onSubmit = (newCabin: NewCabin) => {
+  const onSubmit = (newCabin: NewCabin | EditCabin) => {
     if (newCabin.image) {
       const file = newCabin.image;
-      mutate({ ...newCabin, image: file });
+      if (!isEditSession) {
+        console.log("create");
+
+        mutate({ ...newCabin, image: file } as NewCabin);
+      } else {
+        console.log("edit", (newCabin as EditCabin).id);
+        mutate({ ...newCabin } as EditCabin, (newCabin as EditCabin).id);
+      }
     }
   };
 
@@ -101,7 +131,10 @@ function CreateCabinForm() {
           {...register("discount", {
             required: "This field is required",
             validate: (value) =>
-              (value !== undefined && value <= regularPrice) ||
+              (value !== undefined &&
+                regularPrice !== null &&
+                value !== null &&
+                value <= regularPrice) ||
               "Discount should be less than regular price",
           })}
         />
@@ -123,7 +156,9 @@ function CreateCabinForm() {
         <FileInput
           id="image"
           accept="image/*"
-          {...register("image", { required: "This field is required" })}
+          {...register("image", {
+            required: cabinToEdit.id ? false : "This field is required",
+          })}
           type="file"
         />
       </FormRowComponent>
