@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
-
+import { useMutationHandler } from "../../hooks/useMutateCabin";
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -65,20 +63,12 @@ export default function CabinRow({
 
   const { image, name, maxCapacity, regularPrice, discount, id } = cabin;
 
-  const queryQlient = useQueryClient();
-
-  const { isPending, mutate } = useMutation({
-    mutationFn: (id: number) => deleteCabin(id),
-    onSuccess: () => {
-      toast.success("cabin deleted successfully");
-      queryQlient.invalidateQueries({
-        queryKey: ["cabin"],
-      });
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { mutate, isPending } = useMutationHandler(
+    deleteCabin,
+    "cabin deleted successfully",
+    "An error occurred while deleting cabins",
+    "cabin"
+  );
 
   if (isPending) return <Spinner />;
 

@@ -4,12 +4,9 @@ import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 import { createCabin, editCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
 import FormRowComponent from "../../ui/FormRow";
-
+import { useMutationHandler } from "../../hooks/useMutateCabin";
 type NewCabin = {
   name: string;
   maxCapacity: number;
@@ -36,7 +33,6 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
   } else {
     console.log("no");
   }
-  // const { id: editId, ...editValues } = cabinToEdit;
 
   const isEditSession = Boolean(cabinToEdit?.id);
 
@@ -49,32 +45,21 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
   const { errors } = formState;
   const regularPrice = watch("regularPrice");
 
-  const queryQlient = useQueryClient();
+  const { mutate: createCabinMutation, isPending: isCreating } =
+    useMutationHandler(
+      createCabin,
+      "Cabin created successfully",
+      "Failed to create cabin",
+      "cabin"
+    );
 
-  const { mutate: create, isPending } = useMutation({
-    mutationFn: createCabin,
-    onSuccess: () => {
-      toast.success("Cabin created successfully");
-      queryQlient.invalidateQueries({
-        queryKey: ["cabin"],
-      });
-      reset();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const { mutate: edit } = useMutation({
-    mutationFn: editCabin,
-    onSuccess: () => {
-      toast.success("Cabin edited successfully");
-      queryQlient.invalidateQueries({
-        queryKey: ["cabin"],
-      });
-      reset();
-    },
-  });
+  const { mutate: editCabinMutation, isPending: isEditing } =
+    useMutationHandler(
+      editCabin,
+      "Cabin edited successfully",
+      "Failed to edit cabin",
+      "cabin"
+    );
 
   const onSubmit = (newCabin: NewCabin | EditCabin) => {
     if (newCabin.image) {
@@ -82,10 +67,13 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
       if (!isEditSession) {
         console.log("create");
 
-        create({ ...newCabin, image: file } as NewCabin);
+        createCabinMutation({ ...newCabin, image: file } as NewCabin);
       } else {
         console.log("edit", (newCabin as EditCabin).id);
-        edit({ ...newCabin, id: (newCabin as EditCabin).id } as EditCabin);
+        editCabinMutation({
+          ...newCabin,
+          id: (newCabin as EditCabin).id,
+        } as EditCabin);
       }
     }
   };
@@ -171,10 +159,14 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
         />
       </FormRowComponent>
       <FormRowComponent>
-        <Button disabled={isPending} $variation="secondary" type="reset">
+        <Button
+          disabled={isCreating || isEditing}
+          $variation="secondary"
+          type="reset"
+        >
           Cancel
         </Button>
-        <Button>Edit cabin</Button>
+        <Button>Add cabin</Button>
       </FormRowComponent>
     </Form>
   );
