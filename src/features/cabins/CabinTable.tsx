@@ -32,7 +32,7 @@ export default function CabinTable() {
   const {
     isPending,
     data: cabins,
-    error,
+    // error,
   } = useQuery({
     queryKey: ["cabin"],
     queryFn: getCabins,

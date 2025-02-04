@@ -1,5 +1,6 @@
 import supabase from "./supabase";
 import { supabaseUrl } from "./supabase";
+
 export async function getCabins() {
   const { data, error } = await supabase.from("cabins").select("*");
 
@@ -34,17 +35,16 @@ type EditCabin = {
   description: string | null;
   discount: number | null;
   id: number;
-  image?: string | null;
+  image?: string | null | FileList;
   maxCapacity: number | null;
   name: string | null;
   regularPrice: number | null;
 };
 
-export async function createCabin(newCabin: NewCabin | EditCabin, id?: number) {
+export async function createCabin(newCabin: NewCabin) {
   let imageName: string = "";
-  console.log(newCabin.image);
 
-  const hasImagePath = (newCabin.image as string)?.startsWith?.(supabaseUrl);
+  // const hasImagePath = (newCabin.image as string)?.startsWith?.(supabaseUrl);
 
   if (newCabin.image instanceof FileList) {
     imageName = newCabin.image
@@ -52,34 +52,13 @@ export async function createCabin(newCabin: NewCabin | EditCabin, id?: number) {
       : "";
   }
 
-  const imagePath = hasImagePath
-    ? (newCabin.image as string)
-    : `${supabaseUrl}/storage/v1/object/public/Hotel/${imageName}`;
+  const imagePath = `${supabaseUrl}/storage/v1/object/public/Hotel/${imageName}`;
 
-  let query;
-  console.log(id, "iddddd?");
-  if (!(newCabin as EditCabin).id) {
-    query = supabase
-      .from("cabins")
-      .insert([{ ...newCabin, image: imagePath }])
-      .select()
-      .single();
-    console.log("here");
-  } else {
-    console.log("there");
-
-    query = supabase
-      .from("cabins")
-      .update({
-        ...newCabin,
-        image: imagePath,
-      })
-      .eq("id", (newCabin as EditCabin).id)
-      .select()
-      .single();
-  }
-
-  const { data, error } = await query;
+  const { data, error } = await supabase
+    .from("cabins")
+    .insert([{ ...newCabin, image: imagePath }])
+    .select()
+    .single();
 
   if (error) {
     console.error(error);
@@ -90,12 +69,62 @@ export async function createCabin(newCabin: NewCabin | EditCabin, id?: number) {
     console.warn("No rows were affected. Check if the ID exists.");
   }
 
-  console.log("Affected row:", data);
-
   if (newCabin.image instanceof FileList) {
     const { error: uploadError } = await supabase.storage
       .from("Hotel")
       .upload(imageName, newCabin.image[0]);
+
+    if (uploadError) {
+      await supabase
+        .from("cabins")
+        .delete()
+        .eq("id", data?.id as number);
+      throw new Error("An error occurred while uploading the image");
+    }
+  }
+
+  return data;
+}
+
+export async function editCabin(existedCabin: EditCabin) {
+  let imageName = "";
+  const hasImagePath = (existedCabin.image as string)?.startsWith?.(
+    supabaseUrl
+  );
+
+  if (existedCabin.image instanceof FileList) {
+    imageName = existedCabin.image
+      ? `${Math.random()}-${existedCabin.image[0].name.replaceAll("/", "")}`
+      : "";
+  }
+
+  const imagePath = hasImagePath
+    ? (existedCabin.image as string)
+    : `${supabaseUrl}/storage/v1/object/public/Hotel/${imageName}`;
+
+  const { data, error } = await supabase
+    .from("cabins")
+    .update({
+      ...existedCabin,
+      image: imagePath,
+    })
+    .eq("id", (existedCabin as EditCabin).id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("An error occurred while creating or updating cabins");
+  }
+
+  if (!data) {
+    console.warn("No rows were affected. Check if the ID exists.");
+  }
+
+  if (existedCabin.image instanceof FileList) {
+    const { error: uploadError } = await supabase.storage
+      .from("Hotel")
+      .upload(imageName, existedCabin.image[0]);
 
     if (uploadError) {
       await supabase

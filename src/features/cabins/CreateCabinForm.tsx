@@ -5,7 +5,7 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
+import { createCabin, editCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import FormRowComponent from "../../ui/FormRow";
@@ -51,7 +51,7 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
 
   const queryQlient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: create, isPending } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
       toast.success("Cabin created successfully");
@@ -65,25 +65,33 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
     },
   });
 
+  const { mutate: edit } = useMutation({
+    mutationFn: editCabin,
+    onSuccess: () => {
+      toast.success("Cabin edited successfully");
+      queryQlient.invalidateQueries({
+        queryKey: ["cabin"],
+      });
+      reset();
+    },
+  });
+
   const onSubmit = (newCabin: NewCabin | EditCabin) => {
     if (newCabin.image) {
       const file = newCabin.image;
       if (!isEditSession) {
         console.log("create");
 
-        mutate({ ...newCabin, image: file } as NewCabin);
+        create({ ...newCabin, image: file } as NewCabin);
       } else {
         console.log("edit", (newCabin as EditCabin).id);
-        mutate({ ...newCabin, id: (newCabin as EditCabin).id } as EditCabin);
+        edit({ ...newCabin, id: (newCabin as EditCabin).id } as EditCabin);
       }
     }
   };
 
-  const onError = (data) => {
-    console.log(data);
-  };
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRowComponent
         label="Cabin name"
         error={errors.name?.message as string}
