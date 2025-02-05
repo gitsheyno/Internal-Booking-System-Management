@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 type formProps = {
-  type?: "modal";
+  type?: "modal" | "form";
 };
 
 const Form = styled.form<formProps>`

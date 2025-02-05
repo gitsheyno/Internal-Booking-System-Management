@@ -19,6 +19,7 @@ function UpdateSettingsForm() {
     return <Spinner />;
   }
 
+  console.log("settings", settings);
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>, name: string) => {
     console.log(e.target.value, e.target.id);
     const newSettings = {
@@ -28,7 +29,6 @@ function UpdateSettingsForm() {
       minimumBookingLength: settings?.minimumBookingLength ?? null,
       [name]: e.target.value,
     };
-
     mutate(newSettings);
   };
 

@@ -27,13 +27,20 @@ type EditCabin = {
   regularPrice: number | null;
 };
 
-function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
+function CreateCabinForm({
+  cabinToEdit,
+  onCloseModal,
+}: {
+  cabinToEdit?: EditCabin;
+  onCloseModal?: () => void;
+}) {
   if (cabinToEdit) {
     console.log("yes");
   } else {
     console.log("no");
   }
 
+  console.log("check this out ", cabinToEdit);
   const isEditSession = Boolean(cabinToEdit?.id);
 
   const { register, handleSubmit, reset, formState, watch } = useForm<
@@ -65,21 +72,23 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
     if (newCabin.image) {
       const file = newCabin.image;
       if (!isEditSession) {
-        console.log("create");
-
         createCabinMutation({ ...newCabin, image: file } as NewCabin);
+        onCloseModal?.();
       } else {
-        console.log("edit", (newCabin as EditCabin).id);
         editCabinMutation({
           ...newCabin,
           id: (newCabin as EditCabin).id,
         } as EditCabin);
+        onCloseModal?.();
       }
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? "modal" : "form"}
+    >
       <FormRowComponent
         label="Cabin name"
         error={errors.name?.message as string}
@@ -163,6 +172,7 @@ function CreateCabinForm({ cabinToEdit }: { cabinToEdit?: EditCabin }) {
           disabled={isCreating || isEditing}
           $variation="secondary"
           type="reset"
+          onClick={() => onCloseModal?.()}
         >
           Cancel
         </Button>
