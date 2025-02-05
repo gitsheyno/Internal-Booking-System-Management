@@ -9,11 +9,14 @@ export function useMutationHandler<T, V>(
 ) {
   const queryClient = useQueryClient();
 
+  console.log(queryKey);
   const { mutate, isPending, isSuccess, isError } = useMutation({
     mutationFn: mutateFunction,
     onSuccess: () => {
       toast.success(successMessage);
-      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      queryClient.invalidateQueries({
+        queryKey: [queryKey],
+      });
     },
     onError: (error) => {
       toast.error(errorMessage || error.message);
