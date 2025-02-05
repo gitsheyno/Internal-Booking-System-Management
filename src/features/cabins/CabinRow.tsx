@@ -5,6 +5,7 @@ import Spinner from "../../ui/Spinner";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import { useMutationHandler } from "../../hooks/useMutateCabin";
+import { HiPencil, HiTrash } from "react-icons/hi2";
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -80,9 +81,18 @@ export default function CabinRow({
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice as number)}</Price>
         <Discount>{formatCurrency(discount as number)}</Discount>
-        <div>
-          <button onClick={() => setShowForm((prev) => !prev)}>Edit</button>
-          <button onClick={() => mutate(id)}>Delete</button>
+        <div
+          style={{
+            display: "flex",
+            gap: "0.6rem",
+          }}
+        >
+          <button onClick={() => setShowForm((prev) => !prev)}>
+            <HiPencil />
+          </button>
+          <button onClick={() => mutate(id)}>
+            <HiTrash />
+          </button>
         </div>
       </TableRow>
       {showForm && <CreateCabinForm cabinToEdit={cabin} />}
