@@ -6,6 +6,8 @@ import CreateCabinForm from "./CreateCabinForm";
 import { useMutationHandler } from "../../hooks/useMutateCabin";
 import { HiPencil, HiTrash } from "react-icons/hi2";
 import { Modal } from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -94,9 +96,21 @@ export default function CabinRow({
             <Modal.Window name="edit">
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
-            <button onClick={() => mutate(id)}>
-              <HiTrash />
-            </button>
+          </Modal>
+          <Modal>
+            <Modal.Open opens="delete">
+              <button>
+                <HiTrash />
+              </button>
+            </Modal.Open>
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName="cabins"
+                disabled={isPending}
+                onConfirm={() => mutate(id)}
+                onCloseModal={() => {}}
+              />
+            </Modal.Window>
           </Modal>
         </div>
       </TableRow>
