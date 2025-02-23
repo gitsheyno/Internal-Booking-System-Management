@@ -94,7 +94,35 @@ function Row({ children }: CommonRowProps) {
     </StyledRow>
   );
 }
-function Body({ children }: CommonRowProps) {}
+function Body({
+  data,
+  render,
+}: {
+  data:
+    | {
+        created_at: string;
+        description: string | null;
+        discount: number | null;
+        id: number;
+        image: string | null;
+        maxCapacity: number | null;
+        name: string | null;
+        regularPrice: number | null;
+      }[]
+    | undefined;
+  render: (cabin: {
+    created_at: string;
+    description: string | null;
+    discount: number | null;
+    id: number;
+    image: string | null;
+    maxCapacity: number | null;
+    name: string | null;
+    regularPrice: number | null;
+  }) => JSX.Element;
+}) {
+  return <StyledBody>{data?.map(render)}</StyledBody>;
+}
 
 Table.Header = Header;
 Table.Row = Row;

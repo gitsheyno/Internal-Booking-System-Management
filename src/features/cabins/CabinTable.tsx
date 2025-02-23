@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import styled from "styled-components";
 import { getCabins } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
@@ -25,9 +24,10 @@ export default function CabinTable() {
         <div>Discount</div>
         <div></div>
       </Table.Header>
-      {cabins?.map((cabin) => (
-        <CabinRow key={cabin.id} cabin={cabin} />
-      ))}
+      <Table.Body
+        data={cabins}
+        render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
+      />
     </Table>
   );
 }
