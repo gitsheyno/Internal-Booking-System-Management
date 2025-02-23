@@ -43,7 +43,7 @@ function CreateCabinForm({
   console.log("check this out ", cabinToEdit);
   const isEditSession = Boolean(cabinToEdit?.id);
 
-  const { register, handleSubmit, reset, formState, watch } = useForm<
+  const { register, handleSubmit, formState, watch } = useForm<
     NewCabin | EditCabin
   >({
     defaultValues: isEditSession && cabinToEdit ? { ...cabinToEdit } : {},

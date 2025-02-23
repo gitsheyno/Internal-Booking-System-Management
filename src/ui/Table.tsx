@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
@@ -9,7 +10,12 @@ const StyledTable = styled.div`
   overflow: hidden;
 `;
 
-const CommonRow = styled.div`
+interface CommonRowProps {
+  columns?: string;
+  children?: React.ReactNode;
+}
+
+const CommonRow = styled.div<CommonRowProps>`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   column-gap: 2.4rem;
@@ -58,3 +64,39 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+type CTXProps = {
+  columns: string;
+};
+
+const TableContext = React.createContext<CTXProps>({ columns: "" });
+export default function Table({ columns = "", children }: CommonRowProps) {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+function Header({ children }: CommonRowProps) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledHeader columns={columns} role="row">
+      {children}
+    </StyledHeader>
+  );
+}
+function Row({ children }: CommonRowProps) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledRow columns={columns} role="row">
+      {children}
+    </StyledRow>
+  );
+}
+function Body({ children }: CommonRowProps) {}
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;
