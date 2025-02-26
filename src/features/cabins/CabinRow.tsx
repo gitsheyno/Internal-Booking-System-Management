@@ -77,21 +77,25 @@ export default function CabinRow({
           }}
         >
           <Modal>
-            <Modal.Open opens="edit">
-              <button>
-                <HiPencil />
-              </button>
-            </Modal.Open>
+            <Menus.Menu>
+              <Menus.Toggle id={id} />
+
+              <Menus.List id={id}>
+                <Modal.Open opens="edit">
+                  <Menus.Button>Edit</Menus.Button>
+                  {/* <HiPencil /> */}
+                </Modal.Open>
+                <Modal.Open opens="delete">
+                  <Menus.Button>Delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+            </Menus.Menu>
+
             <Modal.Window name="edit">
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
           </Modal>
           <Modal>
-            <Modal.Open opens="delete">
-              <button>
-                <HiTrash />
-              </button>
-            </Modal.Open>
             <Modal.Window name="delete">
               <ConfirmDelete
                 resourceName="cabins"
@@ -101,14 +105,6 @@ export default function CabinRow({
               />
             </Modal.Window>
           </Modal>
-          <Menus.Menu>
-            <Menus.Toggle id={id} />
-
-            <Menus.List id={id}>
-              <Menus.Button>Edit</Menus.Button>
-              <Menus.Button>Delete</Menus.Button>
-            </Menus.List>
-          </Menus.Menu>
         </div>
       </Table.Row>
     </>

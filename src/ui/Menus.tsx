@@ -2,6 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const Menu = styled.div`
   display: flex;
@@ -132,20 +133,30 @@ function List({ id, children }) {
   if (!context) {
     throw new Error("Toggle must be used within a MenusProvider");
   }
-  const { openId, postion } = context;
+  const { openId, postion, close } = context;
+  const ref = useClickOutside(close);
 
   if (openId !== id) return null;
   return createPortal(
-    <StyledList position={postion as { x: number; y: number }}>
+    <StyledList ref={ref} position={postion as { x: number; y: number }}>
       {children}
     </StyledList>,
     document.body
   );
 }
-function Button({ children }: { children: React.ReactNode }) {
+function Button({ children, onClick }: { children: React.ReactNode }) {
+  const context = React.useContext(MenusContext);
+  if (!context) {
+    throw new Error("Toggle must be used within a MenusProvider");
+  }
+  const { close } = context;
+  const handleClick = () => {
+    onClick?.();
+    close();
+  };
   return (
     <li>
-      <StyledButton>{children}</StyledButton>
+      <StyledButton onClick={handleClick}>{children}</StyledButton>
     </li>
   );
 }
