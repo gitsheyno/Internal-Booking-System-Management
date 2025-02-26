@@ -8,6 +8,7 @@ import { HiPencil, HiTrash } from "react-icons/hi2";
 import { Modal } from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 const Img = styled.img`
   display: block;
   width: 6.4rem;
@@ -100,6 +101,14 @@ export default function CabinRow({
               />
             </Modal.Window>
           </Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={id} />
+
+            <Menus.List id={id}>
+              <Menus.Button>Edit</Menus.Button>
+              <Menus.Button>Delete</Menus.Button>
+            </Menus.List>
+          </Menus.Menu>
         </div>
       </Table.Row>
     </>
