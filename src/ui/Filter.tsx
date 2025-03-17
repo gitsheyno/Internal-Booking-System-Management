@@ -58,6 +58,7 @@ export default function Filter({
       {options.map((option) => (
         <FilterButton
           active={currentValue === option.value}
+          disabled={currentValue === option.value}
           key={option.value}
           onClick={() => handeClick(option.value)}
         >
