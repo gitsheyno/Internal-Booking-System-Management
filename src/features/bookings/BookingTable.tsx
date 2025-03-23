@@ -5,24 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getBookings } from "../../services/apiBookings";
 import Spinner from "../../ui/Spinner";
 
-interface Booking {
-  id: number;
-  created_at: string;
-  startDate: string | null;
-  endDate: string | null;
-  numberNights: number | null;
-  numberGuests: number | null;
-  status: string | null;
-  totalPrice: number | null;
-  cabins: {
-    name: string | null;
-  } | null;
-  guests: {
-    fullName: string | null;
-    email: string | null;
-  } | null;
-}
-
 function BookingTable() {
   const {
     isPending,
@@ -32,7 +14,6 @@ function BookingTable() {
     queryKey: ["bookings"],
     queryFn: getBookings,
   });
-  console.log(bookings);
   if (isPending) return <Spinner />;
 
   return (

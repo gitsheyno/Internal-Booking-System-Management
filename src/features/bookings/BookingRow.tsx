@@ -54,12 +54,12 @@ const Amount = styled.div`
 
 function BookingRow({
   booking: {
-    id: bookingId,
-    created_at,
+    // id: bookingId,
+    // created_at,
     startDate,
     endDate,
     numberNights,
-    numberGuests,
+    // numberGuests,
     totalPrice,
     status,
     guests,
@@ -78,6 +78,12 @@ function BookingRow({
   };
 
   const cabinName = cabins ? cabins.name : null;
+
+  const handleStatus = (status: string): string => {
+    const st = status as keyof typeof statusToTagName;
+    console.log(status, st, statusToTagName[st]);
+    return statusToTagName[st];
+  };
 
   return (
     <Table.Row>
@@ -101,7 +107,9 @@ function BookingRow({
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <Tag type={handleStatus(status as string)}>
+        {(status as string).replace("-", " ")}
+      </Tag>
 
       <Amount>{formatCurrency(totalPrice as number)}</Amount>
     </Table.Row>
