@@ -1,7 +1,7 @@
 import { supabaseUrl } from "../services/supabase";
 
-const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabin-images/`;
-
+// const imageUrl = `${supabaseUrl}/storage/v1/object/public/cabin-images/`;
+const imageUrl = `${supabaseUrl}/storage/v1/object/public/Hotel/`;
 export const cabins = [
   {
     name: "001",
@@ -76,3 +76,4 @@ export const cabins = [
       "Experience the epitome of luxury and grandeur with your large group or multiple families in our grand cabin 008. This cabin offers a lavish retreat that caters to all your needs and desires. The cabin features an opulent design and boasts of high-end finishes, intricate details and the finest quality wood throughout. Inside, the cabin features multiple grand living areas with fireplaces, a formal dining area, and a gourmet kitchen that is a chef's dream. The bedrooms are designed for ultimate comfort and luxury, with plush beds and en-suite spa-inspired bathrooms. Step outside and immerse yourself in the beauty of nature from your private deck, featuring a luxurious hot tub and ample seating areas for ultimate relaxation and enjoyment.",
   },
 ];
+console.log(cabins)
