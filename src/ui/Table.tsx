@@ -94,32 +94,12 @@ function Row({ children }: CommonRowProps) {
     </StyledRow>
   );
 }
-function Body({
+function Body<TData>({
   data,
   render,
 }: {
-  data:
-    | {
-        created_at: string;
-        description: string | null;
-        discount: number | null;
-        id: number;
-        image: string | null;
-        maxCapacity: number | null;
-        name: string | null;
-        regularPrice: number | null;
-      }[]
-    | undefined;
-  render: (cabin: {
-    created_at: string;
-    description: string | null;
-    discount: number | null;
-    id: number;
-    image: string | null;
-    maxCapacity: number | null;
-    name: string | null;
-    regularPrice: number | null;
-  }) => JSX.Element;
+  data: TData[] | undefined;
+  render: (item: TData) => JSX.Element;
 }) {
   return <StyledBody>{data?.map(render)}</StyledBody>;
 }

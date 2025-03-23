@@ -7,6 +7,24 @@ import Table from "../../ui/Table";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 
+interface Booking {
+  id: number;
+  created_at: string;
+  startDate: string | null;
+  endDate: string | null;
+  numberNights: number | null;
+  numberGuests: number | null;
+  status: string | null;
+  totalPrice: number | null;
+  cabins: {
+    name: string | null;
+  } | null;
+  guests: {
+    fullName: string | null;
+    email: string | null;
+  } | null;
+}
+
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -40,19 +58,26 @@ function BookingRow({
     created_at,
     startDate,
     endDate,
-    numNights,
-    numGuests,
+    numberNights,
+    numberGuests,
     totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
+    guests,
+    cabins,
   },
+}: {
+  booking: Booking;
 }) {
+  const guestName = guests ? guests.fullName : null;
+  const email = guests ? guests.email : null;
+
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
+
+  const cabinName = cabins ? cabins.name : null;
 
   return (
     <Table.Row>
@@ -65,20 +90,20 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
+          {startDate && isToday(new Date(startDate))
             ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
+            : startDate && formatDistanceFromNow(startDate)}{" "}
+          &rarr; {numberNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
+          {startDate && format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
+          {endDate && format(new Date(endDate), "MMM dd yyyy")}
         </span>
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>{formatCurrency(totalPrice as number)}</Amount>
     </Table.Row>
   );
 }
