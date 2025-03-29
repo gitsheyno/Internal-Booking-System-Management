@@ -18,7 +18,10 @@ export async function getBooking(id: number) {
   return data;
 }
 
-export async function getBookings():Promise<{
+export async function getBookings({filter} : {filter : {
+  field: string;
+  value: string;
+} | null}):Promise<{
   id: number;
   created_at: string;
   startDate: string | null;
@@ -35,10 +38,16 @@ export async function getBookings():Promise<{
     email: string | null;
   } | null;
 }[]>{
-   const {data,error} = await supabase
-   .from("bookings")
-   .select("id, created_at, startDate, endDate, numberNights, numberGuests, status, totalPrice, cabins(name), guests(fullName, email)");
 
+  let query = supabase.from("bookings").select("id, created_at, startDate, endDate, numberNights, numberGuests, status, totalPrice, cabins(name), guests(fullName, email)");
+
+  if(filter !== null ) { 
+    console.log(filter,filter.field,filter.value);
+    query = query.eq(filter.field, filter.value);
+  } 
+  const {data,error} = await query;
+  console.log(data);
+   
    if(error){
     console.log(error);
     throw new Error("Bookings could not get loaded");

@@ -4,15 +4,26 @@ import Menus from "../../ui/Menus";
 import { useQuery } from "@tanstack/react-query";
 import { getBookings } from "../../services/apiBookings";
 import Spinner from "../../ui/Spinner";
+import { useSearchParams } from "react-router-dom";
 
 function BookingTable() {
+  const [searchparams] = useSearchParams();
+
+  // Filter
+
+  const filterValue = searchparams.get("status") || "all";
+  const filter =
+    !filterValue || filterValue === "all"
+      ? null
+      : { field: "status", value: filterValue };
+
   const {
     isPending,
     data: bookings,
     // error,
   } = useQuery({
-    queryKey: ["bookings"],
-    queryFn: getBookings,
+    queryKey: ["bookings", filter],
+    queryFn: () => getBookings({ filter }),
   });
   if (isPending) return <Spinner />;
 
