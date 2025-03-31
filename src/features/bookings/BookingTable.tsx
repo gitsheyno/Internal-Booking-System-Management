@@ -6,8 +6,11 @@ import { getBookings } from "../../services/apiBookings";
 import Spinner from "../../ui/Spinner";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../../ui/Pagination";
+import { useQueryClient } from "@tanstack/react-query";
 
+const PAGE_SIZE = 5;
 function BookingTable() {
+  const queryClient = useQueryClient();
   const [searchparams] = useSearchParams();
 
   // Filter
@@ -35,11 +38,20 @@ function BookingTable() {
     queryKey: ["bookings", filter, sort, page],
     queryFn: () => getBookings({ filter, sort, page }),
   });
+
   if (isPending) return <Spinner />;
 
   const bookings = data?.data;
   const count = data?.count;
 
+  const pageCount = Math.ceil((count as number) / PAGE_SIZE);
+
+  if (page < pageCount) {
+    queryClient.prefetchQuery({
+      queryKey: ["bookings", filter, sort, page + 1],
+      queryFn: () => getBookings({ filter, sort, page: page + 1 }),
+    });
+  }
   return (
     <Menus>
       <Table columns="0.6fr 2fr 2.4fr 1.4fr 1fr 3.2rem">
