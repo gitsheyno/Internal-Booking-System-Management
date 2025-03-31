@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBookings } from "../../services/apiBookings";
 import Spinner from "../../ui/Spinner";
 import { useSearchParams } from "react-router-dom";
+import Pagination from "../../ui/Pagination";
 
 function BookingTable() {
   const [searchparams] = useSearchParams();
@@ -52,6 +53,9 @@ function BookingTable() {
             <BookingRow key={booking.id} booking={booking} />
           )}
         />
+        <Table.Footer>
+          <Pagination count={5} />
+        </Table.Footer>
       </Table>
     </Menus>
   );
