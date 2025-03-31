@@ -56,16 +56,12 @@ export async function getBookings({filter , sort, page} : {filter : {
     const from =  (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE - 1;
 
-    console.log(from, to);
-    console.log(query.range(from , to));
-    // query = query.range(from , to);
+    query = query.range(from , to);
   }
 
-  //TODO extract count 
   const {data, error, count} = await query;
    
    if(error){
-    console.log(error);
     throw new Error("Bookings could not get loaded");
    }
 
