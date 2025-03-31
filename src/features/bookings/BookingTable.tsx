@@ -24,16 +24,21 @@ function BookingTable() {
   const [field, direction] = sortBy.split("-");
   const sort = { field, direction };
 
+  // Pagination
+  const page: number = Number(searchparams.get("page")) || 1;
+
   const {
     isPending,
-    data: bookings,
+    data,
     // error,
   } = useQuery({
-    queryKey: ["bookings", filter, sort],
-    queryFn: () => getBookings({ filter, sort }),
+    queryKey: ["bookings", filter, sort, page],
+    queryFn: () => getBookings({ filter, sort, page }),
   });
-
   if (isPending) return <Spinner />;
+
+  const bookings = data?.data;
+  const count = data?.count;
 
   return (
     <Menus>
@@ -54,7 +59,7 @@ function BookingTable() {
           )}
         />
         <Table.Footer>
-          <Pagination count={5} />
+          <Pagination count={count as number} />
         </Table.Footer>
       </Table>
     </Menus>

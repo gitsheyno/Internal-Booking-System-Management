@@ -17,28 +17,30 @@ export async function getBooking(id: number) {
   return data;
 }
 
-export async function getBookings({filter , sort} : {filter : {
+export async function getBookings({filter , sort, page} : {filter : {
   field: string;
   value: string;
-} | null , sort : {field  :string , direction  : string } }):Promise<{
-  id: number;
-  created_at: string;
-  startDate: string | null;
-  endDate: string | null;
-  numberNights: number | null;
-  numberGuests: number | null;
-  status: string | null;
-  totalPrice: number | null;
-  cabins: {
-    name: string | null;
-  } | null;
-  guests: {
-    fullName: string | null;
-    email: string | null;
-  } | null;
-}[]>{
+} | null , sort : {field  :string , direction  : string } , page : number })
+// :Promise<{
+//   id: number;
+//   created_at: string;
+//   startDate: string | null;
+//   endDate: string | null;
+//   numberNights: number | null;
+//   numberGuests: number | null;
+//   status: string | null;
+//   totalPrice: number | null;
+//   cabins: {
+//     name: string | null;
+//   } | null;
+//   guests: {
+//     fullName: string | null;
+//     email: string | null;
+//   } | null;
+// }[]>
+{
 
-  let query = supabase.from("bookings").select("id, created_at, startDate, endDate, numberNights, numberGuests, status, totalPrice, cabins(name), guests(fullName, email)");
+  let query = supabase.from("bookings").select("id, created_at, startDate, endDate, numberNights, numberGuests, status, totalPrice, cabins(name), guests(fullName, email)",{count: "exact"});
 
   if(filter ) { 
     console.log(filter,filter.field,filter.value);
@@ -48,15 +50,26 @@ export async function getBookings({filter , sort} : {filter : {
   if(sort) {
     query = query.order(sort.field, {ascending : sort.direction === "asc"});
   }
-  
-  const {data,error} = await query;
+
+  if(page) {
+    const PAGE_SIZE = 5;
+    const from =  (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    console.log(from, to);
+    console.log(query.range(from , to));
+    // query = query.range(from , to);
+  }
+
+  //TODO extract count 
+  const {data, error, count} = await query;
    
    if(error){
     console.log(error);
     throw new Error("Bookings could not get loaded");
    }
 
-   return data;
+   return {data , count};
 
 }
 

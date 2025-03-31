@@ -65,7 +65,7 @@ type PaginationProps = {
   count: number;
 };
 
-const PAGE_SIZE: number = 10;
+const PAGE_SIZE: number = 5;
 
 export default function Pagination({ count }: PaginationProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,7 +86,7 @@ export default function Pagination({ count }: PaginationProps) {
     setSearchParams(searchParams);
   };
 
-  if (count <= PAGE_SIZE) return null;
+  if (PAGE_SIZE < 1) return null;
 
   return (
     <StyledPagination>
