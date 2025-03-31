@@ -17,14 +17,21 @@ function BookingTable() {
       ? null
       : { field: "status", value: filterValue };
 
+  // Sort
+
+  const sortBy = searchparams.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
+  const sort = { field, direction };
+
   const {
     isPending,
     data: bookings,
     // error,
   } = useQuery({
-    queryKey: ["bookings", filter],
-    queryFn: () => getBookings({ filter }),
+    queryKey: ["bookings", filter, sort],
+    queryFn: () => getBookings({ filter, sort }),
   });
+
   if (isPending) return <Spinner />;
 
   return (

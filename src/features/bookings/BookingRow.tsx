@@ -81,7 +81,6 @@ function BookingRow({
 
   const handleStatus = (status: string): string => {
     const st = status as keyof typeof statusToTagName;
-    console.log(status, st, statusToTagName[st]);
     return statusToTagName[st];
   };
 
