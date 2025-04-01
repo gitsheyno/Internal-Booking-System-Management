@@ -1,15 +1,16 @@
-import styled from "styled-components";
-
-import BookingDataBox from "./BookingDataBox";
-import Row from "../../ui/Row";
-import Heading from "../../ui/Heading";
-import Tag from "../../ui/Tag";
-import ButtonGroup from "../../ui/ButtonGroup";
-import Button from "../../ui/Button";
-import ButtonText from "../../ui/ButtonText";
-import { useBooknig } from "../../hooks/useBooking";
-import { useMoveBack } from "../../hooks/useMoveBack";
-import Spinner from "../../ui/Spinner";
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import BookingDataBox from './BookingDataBox';
+import Row from '../../ui/Row';
+import Heading from '../../ui/Heading';
+import Tag from '../../ui/Tag';
+import ButtonGroup from '../../ui/ButtonGroup';
+import Button from '../../ui/Button';
+import ButtonText from '../../ui/ButtonText';
+import { useBooknig } from '../../hooks/useBooking';
+import { useMoveBack } from '../../hooks/useMoveBack';
+import Spinner from '../../ui/Spinner';
+import { HiArrowDownOnSquare } from 'react-icons/hi2';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -18,19 +19,15 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  // const booking = {};
-  // const status = "checked-in";
-
   const moveBack = useMoveBack();
-
+  const navigate = useNavigate();
   const statusToTagName = {
-    unconfirmed: "blue",
-    "checked-in": "green",
-    "checked-out": "silver",
+    unconfirmed: 'blue',
+    'checked-in': 'green',
+    'checked-out': 'silver',
   };
 
   const { booking, isLoading } = useBooknig();
-  console.log(booking);
   if (isLoading) {
     return <Spinner />;
   }
@@ -40,15 +37,23 @@ function BookingDetail() {
       <Row type="horizontal">
         <HeadingGroup>
           <Heading as="h1">Booking #{bookingId}</Heading>
-          <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+          <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
         </HeadingGroup>
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
-      {/* <BookingDataBox booking={booking} /> */}
+      <BookingDataBox booking={booking} />
 
       <ButtonGroup>
-        <Button variation="secondary" onClick={moveBack}>
+        {status === 'unconfirmed' && (
+          <Button
+            icon={<HiArrowDownOnSquare />}
+            onClick={() => navigate(`/checkin/${bookingId}`)}
+          >
+            Check in
+          </Button>
+        )}
+        <Button $variation="secondary" onClick={moveBack}>
           Back
         </Button>
       </ButtonGroup>
