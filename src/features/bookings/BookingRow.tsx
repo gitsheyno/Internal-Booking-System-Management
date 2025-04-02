@@ -6,9 +6,9 @@ import Table from '../../ui/Table';
 
 import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
-import { HiArrowDownOnSquare, HiEye } from 'react-icons/hi2';
+import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
-
+import { useCheckout } from '../cabins/useCheckout';
 interface Booking {
   id: number;
   created_at: string;
@@ -83,6 +83,8 @@ function BookingRow({
 
   const cabinName = cabins ? cabins.name : null;
 
+  const { checkOut, isCheckingOut } = useCheckout();
+
   const handleStatus = (status: string): string => {
     const st = status as keyof typeof statusToTagName;
     return statusToTagName[st];
@@ -130,6 +132,15 @@ function BookingRow({
               onClick={() => navigate(`/checkin/${bookingId}`)}
             >
               Check in
+            </Menus.Button>
+          )}
+          {status === 'checked-in' && (
+            <Menus.Button
+              icon={<HiArrowUpOnSquare />}
+              onClick={() => checkOut(bookingId)}
+              disabled={isCheckingOut}
+            >
+              Check out
             </Menus.Button>
           )}
         </Menus.List>
