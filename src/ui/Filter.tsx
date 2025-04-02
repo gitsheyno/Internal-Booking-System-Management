@@ -1,5 +1,5 @@
-import { useSearchParams } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { useSearchParams } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
 const StyledFilter = styled.div`
   border: 1px solid var(--color-grey-100);
@@ -48,9 +48,12 @@ export default function Filter({
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentValue =
-    searchParams.get(filterField) || options.at(0)?.value || "";
+    searchParams.get(filterField) || options.at(0)?.value || '';
   const handeClick = (value: string) => {
     searchParams.set(filterField, value);
+    if (searchParams.get('page')) {
+      searchParams.set('page', '1');
+    }
     setSearchParams(searchParams);
   };
   return (
