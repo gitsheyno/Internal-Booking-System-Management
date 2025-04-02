@@ -8,7 +8,7 @@ export function useCheckin() {
   const navigate = useNavigate();
   
   const { mutate: checkin, isPending: isCheckingIn } = useMutation({
-    mutationFn: ({bookingId, breakfast} : {bookingId : number}) => updateBooking(bookingId, {
+    mutationFn: ({bookingId, breakfast} : {bookingId : number, breakfast ?: {hasBreakfast : boolean, extrasPrice : number, totalPrice : number}}) => updateBooking(bookingId, {
       status: "checked-in",
       isPaid: true,
       ...breakfast,
