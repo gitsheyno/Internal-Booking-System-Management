@@ -14,6 +14,5 @@ export async function login({email,password}:LoginParams) {
         throw new Error(error.message);
     }
 
-    console.log("Login data", data);
     return data
 }

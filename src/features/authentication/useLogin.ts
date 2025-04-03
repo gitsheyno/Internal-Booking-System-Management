@@ -12,12 +12,10 @@ export function useLogin() {
     const navigate = useNavigate();
     const { mutate: loginMutate, isPending: isLoggingIn } = useMutation({
         mutationFn: ({ email, password }: LoginParams) => loginApi({ email, password }),
-        onSuccess: (data) => {
-        console.log('Login successful', data);
+        onSuccess: () => {
         navigate('/dashboard');
         },
-        onError: (error) => {
-        console.error('Login failed', error);
+        onError: () => {
         toast.error('Login failed. Please check your credentials.');
         },
     });
