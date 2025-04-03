@@ -12,6 +12,9 @@ import { useMoveBack } from '../../hooks/useMoveBack';
 import Spinner from '../../ui/Spinner';
 import { HiArrowDownOnSquare, HiArrowUpOnSquare } from 'react-icons/hi2';
 import { useCheckout } from '../cabins/useCheckout';
+import { Modal } from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import { useDeleteBooking } from './useDeleteBooking';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -20,6 +23,8 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
+  const { deleteBookingMutation, isDeleting } = useDeleteBooking();
+
   const moveBack = useMoveBack();
   const navigate = useNavigate();
   const statusToTagName = {
@@ -66,6 +71,16 @@ function BookingDetail() {
             Check out
           </Button>
         )}
+        <Modal>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName="booking"
+              disabled={isDeleting}
+              onConfirm={() => deleteBookingMutation(bookingId)}
+              onCloseModal={() => {}}
+            />
+          </Modal.Window>
+        </Modal>
       </ButtonGroup>
     </>
   );
