@@ -1,8 +1,8 @@
-import React from "react";
-import { createPortal } from "react-dom";
-import { HiEllipsisVertical } from "react-icons/hi2";
-import styled from "styled-components";
-import { useClickOutside } from "../hooks/useClickOutside";
+import React from 'react';
+import { createPortal } from 'react-dom';
+import { HiEllipsisVertical } from 'react-icons/hi2';
+import styled from 'styled-components';
+import { useClickOutside } from '../hooks/useClickOutside';
 
 const Menu = styled.div`
   display: flex;
@@ -77,16 +77,16 @@ type MenusContextType = {
   postion: { x: number; y: number } | null;
 };
 const MenusContext = React.createContext<MenusContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export default function Menus({ children }: { children: React.ReactNode }) {
-  const [openId, setOpenId] = React.useState("");
+  const [openId, setOpenId] = React.useState('');
   const [postion, setPosition] = React.useState<{
     x: number;
     y: number;
   } | null>(null);
-  const close = () => setOpenId("");
+  const close = () => setOpenId('');
   const open = setOpenId;
   return (
     <MenusContext.Provider
@@ -100,12 +100,12 @@ export default function Menus({ children }: { children: React.ReactNode }) {
 function Toggle({ id }) {
   const context = React.useContext(MenusContext);
   if (!context) {
-    throw new Error("Toggle must be used within a MenusProvider");
+    throw new Error('Toggle must be used within a MenusProvider');
   }
   const { openId, close, open, setPosition } = context;
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = (e.target as HTMLElement)
-      .closest("button")
+      .closest('button')
       ?.getBoundingClientRect();
 
     if (rect) {
@@ -115,7 +115,7 @@ function Toggle({ id }) {
       });
     }
 
-    if (openId === "" || openId !== id) {
+    if (openId === '' || openId !== id) {
       open(id);
     } else {
       close();
@@ -131,7 +131,7 @@ function Toggle({ id }) {
 function List({ id, children }) {
   const context = React.useContext(MenusContext);
   if (!context) {
-    throw new Error("Toggle must be used within a MenusProvider");
+    throw new Error('Toggle must be used within a MenusProvider');
   }
   const { openId, postion, close } = context;
   const ref = useClickOutside(close);
@@ -141,22 +141,36 @@ function List({ id, children }) {
     <StyledList ref={ref} position={postion as { x: number; y: number }}>
       {children}
     </StyledList>,
-    document.body
+    document.body,
   );
 }
-function Button({ children, onClick }: { children: React.ReactNode }) {
+function Button({
+  icon,
+  onClick,
+  children,
+  disabled,
+}: {
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+}) {
   const context = React.useContext(MenusContext);
   if (!context) {
-    throw new Error("Toggle must be used within a MenusProvider");
+    throw new Error('Toggle must be used within a MenusProvider');
   }
   const { close } = context;
   const handleClick = () => {
+    console.log('clicked');
     onClick?.();
     close();
   };
   return (
     <li>
-      <StyledButton onClick={handleClick}>{children}</StyledButton>
+      <StyledButton disabled={disabled} onClick={handleClick}>
+        {icon}
+        {children}
+      </StyledButton>
     </li>
   );
 }

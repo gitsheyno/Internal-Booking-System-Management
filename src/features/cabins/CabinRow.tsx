@@ -1,14 +1,14 @@
-import styled from "styled-components";
-import { formatCurrency } from "../../utils/helpers";
-import { deleteCabin } from "../../services/apiCabins";
-import Spinner from "../../ui/Spinner";
-import CreateCabinForm from "./CreateCabinForm";
-import { useMutationHandler } from "../../hooks/useMutateCabin";
-import { HiPencil, HiTrash } from "react-icons/hi2";
-import { Modal } from "../../ui/Modal";
-import ConfirmDelete from "../../ui/ConfirmDelete";
-import Table from "../../ui/Table";
-import Menus from "../../ui/Menus";
+import styled from 'styled-components';
+import { formatCurrency } from '../../utils/helpers';
+import { deleteCabin } from '../../services/apiCabins';
+import Spinner from '../../ui/Spinner';
+import CreateCabinForm from './CreateCabinForm';
+import { useMutationHandler } from '../../hooks/useMutateCabin';
+import { HiPencil, HiTrash } from 'react-icons/hi2';
+import { Modal } from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import Table from '../../ui/Table';
+import Menus from '../../ui/Menus';
 const Img = styled.img`
   display: block;
   width: 6.4rem;
@@ -23,16 +23,16 @@ const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
-  font-family: "Sono";
+  font-family: 'Sono';
 `;
 
 const Price = styled.div`
-  font-family: "Sono";
+  font-family: 'Sono';
   font-weight: 600;
 `;
 
 const Discount = styled.div`
-  font-family: "Sono";
+  font-family: 'Sono';
   font-weight: 500;
   color: var(--color-green-700);
 `;
@@ -55,9 +55,9 @@ export default function CabinRow({
 
   const { mutate, isPending } = useMutationHandler(
     deleteCabin,
-    "cabin deleted successfully",
-    "An error occurred while deleting cabins",
-    "cabin"
+    'cabin deleted successfully',
+    'An error occurred while deleting cabins',
+    'cabin',
   );
 
   if (isPending) return <Spinner />;
@@ -72,8 +72,8 @@ export default function CabinRow({
         <Discount>{formatCurrency(discount as number)}</Discount>
         <div
           style={{
-            display: "flex",
-            gap: "0.6rem",
+            display: 'flex',
+            gap: '0.6rem',
           }}
         >
           <Modal>
@@ -94,8 +94,6 @@ export default function CabinRow({
             <Modal.Window name="edit">
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
-          </Modal>
-          <Modal>
             <Modal.Window name="delete">
               <ConfirmDelete
                 resourceName="cabins"
