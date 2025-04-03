@@ -4,7 +4,6 @@ import { deleteCabin } from '../../services/apiCabins';
 import Spinner from '../../ui/Spinner';
 import CreateCabinForm from './CreateCabinForm';
 import { useMutationHandler } from '../../hooks/useMutateCabin';
-import { HiPencil, HiTrash } from 'react-icons/hi2';
 import { Modal } from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import Table from '../../ui/Table';

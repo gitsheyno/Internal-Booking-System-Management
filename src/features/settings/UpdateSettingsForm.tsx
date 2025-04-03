@@ -1,25 +1,25 @@
-import Form from "../../ui/Form";
-import FormRow from "../../ui/FormRow";
-import Input from "../../ui/Input";
-import { useSeetings } from "../../hooks/useSettings";
-import Spinner from "../../ui/Spinner";
-import { useMutationHandler } from "../../hooks/useMutateCabin";
-import { updateSetting } from "../../services/apiSettings";
+import Form from '../../ui/Form';
+import FormRow from '../../ui/FormRow';
+import Input from '../../ui/Input';
+import { useSeetings } from '../../hooks/useSettings';
+import Spinner from '../../ui/Spinner';
+import { useMutationHandler } from '../../hooks/useMutateCabin';
+import { updateSetting } from '../../services/apiSettings';
 function UpdateSettingsForm() {
   const { isPending, settings } = useSeetings();
 
   const { mutate, isPending: isUpdating } = useMutationHandler(
     updateSetting,
-    "Settings updated successfully",
-    "Failed to update settings",
-    "settings"
+    'Settings updated successfully',
+    'Failed to update settings',
+    'settings',
   );
 
   if (isPending) {
     return <Spinner />;
   }
 
-  console.log("settings", settings);
+  console.log('settings', settings);
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>, name: string) => {
     console.log(e.target.value, e.target.id);
     const newSettings = {
@@ -38,8 +38,8 @@ function UpdateSettingsForm() {
         <Input
           type="number"
           id="minimumBookingLength"
-          defaultValue={settings?.minimumBookingLength ?? ""}
-          onBlur={(e) => handleBlur(e, "minimumBookingLength")}
+          defaultValue={settings?.minimumBookingLength ?? ''}
+          onBlur={(e) => handleBlur(e, 'minimumBookingLength')}
           disabled={isUpdating}
         />
       </FormRow>
@@ -47,8 +47,8 @@ function UpdateSettingsForm() {
         <Input
           type="number"
           id="maxBookingLength"
-          defaultValue={settings?.maxBookingLength ?? ""}
-          onBlur={(e) => handleBlur(e, "maxBookingLength")}
+          defaultValue={settings?.maxBookingLength ?? ''}
+          onBlur={(e) => handleBlur(e, 'maxBookingLength')}
           disabled={isUpdating}
         />
       </FormRow>
@@ -56,8 +56,8 @@ function UpdateSettingsForm() {
         <Input
           type="number"
           id="maxGuestsPerBooking"
-          defaultValue={settings?.maxGuestsPerBooking ?? ""}
-          onBlur={(e) => handleBlur(e, "maxGuestsPerBooking")}
+          defaultValue={settings?.maxGuestsPerBooking ?? ''}
+          onBlur={(e) => handleBlur(e, 'maxGuestsPerBooking')}
           disabled={isUpdating}
         />
       </FormRow>
@@ -65,8 +65,8 @@ function UpdateSettingsForm() {
         <Input
           type="number"
           id="breakfastPrice"
-          defaultValue={settings?.breakfastPrice ?? ""}
-          onBlur={(e) => handleBlur(e, "breakfastPrice")}
+          defaultValue={settings?.breakfastPrice ?? ''}
+          onBlur={(e) => handleBlur(e, 'breakfastPrice')}
           disabled={isUpdating}
         />
       </FormRow>
