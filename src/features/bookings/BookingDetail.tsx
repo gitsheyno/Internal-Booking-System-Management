@@ -72,11 +72,18 @@ function BookingDetail() {
           </Button>
         )}
         <Modal>
+          <Modal.Open opens="delete">
+            <Button $variation="danger">Delete</Button>
+          </Modal.Open>
           <Modal.Window name="delete">
             <ConfirmDelete
               resourceName="booking"
               disabled={isDeleting}
-              onConfirm={() => deleteBookingMutation(bookingId)}
+              onConfirm={() =>
+                deleteBookingMutation(bookingId, {
+                  onSettled: () => navigate(-1),
+                })
+              }
               onCloseModal={() => {}}
             />
           </Modal.Window>

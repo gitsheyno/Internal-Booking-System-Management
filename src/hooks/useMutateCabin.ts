@@ -9,7 +9,6 @@ export function useMutationHandler<T, V>(
 ) {
   const queryClient = useQueryClient();
 
-  console.log(queryKey);
   const { mutate, isPending, isSuccess, isError } = useMutation({
     mutationFn: mutateFunction,
     onSuccess: () => {
