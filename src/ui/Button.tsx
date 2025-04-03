@@ -1,8 +1,9 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 type PropsType = {
-  size?: "small" | "medium" | "large";
-  $variation?: "primary" | "secondary" | "danger"; // 👈 Updated here
+  size?: 'small' | 'medium' | 'large';
+  $variation?: 'primary' | 'secondary' | 'danger';
+  icon?: React.ReactNode;
 };
 
 const sizes = {
@@ -59,13 +60,13 @@ const Button = styled.button<PropsType>`
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
 
-  ${(props) => sizes[props.size || "medium"]}
-  ${(props) => variations[props.$variation || "primary"]} /* 👈 Updated here */
+  ${(props) => sizes[props.size || 'medium']}
+  ${(props) => variations[props.$variation || 'primary']} /* 👈 Updated here */
 `;
 
 Button.defaultProps = {
-  size: "medium",
-  $variation: "primary", // 👈 Updated here
+  size: 'medium',
+  $variation: 'primary', // 👈 Updated here
 };
 
 export default Button;
