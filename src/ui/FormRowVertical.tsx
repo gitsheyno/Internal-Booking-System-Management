@@ -31,7 +31,6 @@ type FormRowVerticalProps = {
 };
 
 function FormRowVertical({ label, error, children }: FormRowVerticalProps) {
-  console.log(children);
   return (
     <StyledFormRow>
       {label && <Label htmlFor={children?.props.id}>{label}</Label>}

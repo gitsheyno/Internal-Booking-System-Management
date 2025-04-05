@@ -13,7 +13,6 @@ export async function login({email,password}:LoginParams) {
     if (error){
         throw new Error(error.message);
     }
-
     return data
 }
 
@@ -24,11 +23,9 @@ export async function getCurrentUser(){
    }
 
    const {data, error} = await supabase.auth.getUser();
-   console.log("user", data);
     if (error){
      throw new Error(error.message);
     }
-
     return data?.user
 }
 

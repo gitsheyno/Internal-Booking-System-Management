@@ -22,6 +22,7 @@ export default function ProtectedRoutes({
   const { isLoading, isAuthenticated } = useUser();
 
   useEffect(() => {
+    console.log("use effect runs");
     if (!isAuthenticated && !isLoading) {
       navigate("/login");
     }
