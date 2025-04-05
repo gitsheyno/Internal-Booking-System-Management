@@ -13,7 +13,6 @@ export function useMutationHandler<T, V>(
     mutationFn: mutateFunction,
     onSuccess: () => {
       toast.success(successMessage);
-      console.log(queryKey, "check");
       queryClient.invalidateQueries({
         queryKey: [queryKey],
       });
