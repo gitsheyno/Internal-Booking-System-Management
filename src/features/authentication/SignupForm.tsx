@@ -4,15 +4,16 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import { useSignUp } from "../../hooks/useSignUp";
+import SpinnerMini from "../../ui/SpinnerMini";
 
 function SignupForm() {
-  const { register, forsmState, getValues, handleSubmit, reset } = useForm<{
+  const { register, formState, getValues, handleSubmit, reset } = useForm<{
     fullName: string;
     email: string;
     password: string;
     passwordConfirm: string;
   }>();
-  const { errors } = forsmState;
+  const { errors } = formState;
 
   const { signupMutate, isSigningUp } = useSignUp();
   const onSubmit = ({
@@ -84,9 +85,9 @@ function SignupForm() {
         <Button $variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button
-          disabled={isSigningUp}
-        >{`!isSigningUp ?  Create new user`}</Button>
+        <Button disabled={isSigningUp}>
+          {!isSigningUp ? "Create new user" : <SpinnerMini />}
+        </Button>
       </FormRow>
     </Form>
   );
