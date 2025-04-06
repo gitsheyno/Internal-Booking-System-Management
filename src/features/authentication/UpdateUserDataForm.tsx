@@ -5,11 +5,12 @@ import FileInput from "../../ui/FileInput";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
-
+import { useUpdateUserInfo } from "../../hooks/useUploadUser";
 import { useUser } from "./useUserHook";
 
 function UpdateUserDataForm() {
-  // We don't need the loading state, and can immediately use the user data, because we know that it has already been loaded at this point
+  const { updateUserInfo, isPending } = useUpdateUserInfo();
+
   const {
     user: {
       email,
@@ -22,6 +23,11 @@ function UpdateUserDataForm() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!fullName) {
+      return;
+    }
+    updateUserInfo({ fullName, avatar }, { onSuccess: () => setAvatar(null) });
   }
 
   return (
@@ -35,12 +41,14 @@ function UpdateUserDataForm() {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           id="fullName"
+          disabled={isPending}
         />
       </FormRow>
       <FormRow label="Avatar image">
         <FileInput
           id="avatar"
           accept="image/*"
+          disabled={isPending}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
               setAvatar(e.target.files[0]);
