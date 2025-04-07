@@ -62,7 +62,7 @@ export async function signup({fullName,email, password}:SignupParams) {
 
 export async function updateUserData({fullName, avatar, password}: {fullName: string; avatar: File | null, password ?: string}) {
 
-    const updateData: { password?: string; data?: { fullName: string; avatar?: File } } = {};
+    const updateData: { password?: string; data?: { fullName: string; avatar: File | null} } = {};
 
     if (password) {
         updateData.password = password;
@@ -71,7 +71,7 @@ export async function updateUserData({fullName, avatar, password}: {fullName: st
     if (fullName) {
         updateData.data = {
             fullName,
-            avatar
+            avatar 
         };
     }
 
