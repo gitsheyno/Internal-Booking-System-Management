@@ -27,6 +27,7 @@ function UpdateUserDataForm() {
     if (!fullName) {
       return;
     }
+
     updateUserInfo({ fullName, avatar }, { onSuccess: () => setAvatar(null) });
   }
 
