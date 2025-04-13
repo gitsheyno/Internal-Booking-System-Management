@@ -8,11 +8,13 @@ const StyledDashboardLayout = styled.div`
 `;
 
 import { useRecentBookings } from "../../hooks/useRecentBookings";
+import { useRecentStays } from "../../hooks/useRecentStays";
 import Spinner from "../../ui/Spinner";
 export default function DashboardLayout() {
   const { isPending, bookings } = useRecentBookings();
+  const { isPending: isPendingStays, stays, confirmedStays } = useRecentStays();
 
-  if (isPending) {
+  if (isPending || isPendingStays) {
     return <Spinner />;
   }
 
