@@ -7,7 +7,15 @@ const StyledDashboardLayout = styled.div`
   gap: 2.4rem;
 `;
 
+import { useRecentBookings } from "../../hooks/useRecentBookings";
+import Spinner from "../../ui/Spinner";
 export default function DashboardLayout() {
+  const { isPending, bookings } = useRecentBookings();
+
+  if (isPending) {
+    return <Spinner />;
+  }
+
   return (
     <StyledDashboardLayout>
       <div>statistics</div>
